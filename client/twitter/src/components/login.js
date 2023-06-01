@@ -18,8 +18,7 @@ function Login() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data.message)
-      navigate('/feed')
+      navigate('/feed');
     } else {
       setMessage(data.message);
     }

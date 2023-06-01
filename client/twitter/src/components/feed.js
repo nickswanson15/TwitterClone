@@ -1,20 +1,22 @@
 /*
 TODO:
 
-double click
+delete and double click
+name / tweet too long
 
-main:
-main feed tweets (only from following) and like / reply / retweet / delete, 
-follow user by clicking button, which stores that users id (the user you want to follow) in your array of following,
-loop through your array of following (which is an array of ids) and for each id (find tweet by id), collect all tweets,
-then sort by created.
+link users to profile page in explore,
+make profiles for all users,
+follow user by clicking button in profile and making post request to follow route.
 
-Search / Explore (display all tweets) (on search submit in feed... take to explore page (same functionality for search bar in feed and search bar in explore page))
+link users to profile page in main,
+main feed tweets (only from following) and like / retweet.
 
-Notifications (likes, replies, retweets)
-Twitter Blue (stripe)
+Notifications (likes, retweets).
+Twitter Blue (stripe).
 
-Route Protection (where necessary)
+Route Protection (where necessary).
+
+Images?
 */
 
 import './style.css';
@@ -24,7 +26,8 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Feed() {
   const navigate = useNavigate();
-  const [tweet, setTweet] = useState('');
+  const [post, setPost] = useState('');
+  const [tweets, setTweets] = useState('');
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +37,7 @@ function Feed() {
         const response = await fetch('/feed');
         const data = await response.json();
         if (response.ok) {
+          setTweets(data.tweets);
           setUsername(data.user.username);
           setLoading(false);
         } else {
@@ -48,7 +52,7 @@ function Feed() {
   }, [navigate]);
 
   const toggle = async (event) => {
-    setTweet('');
+    setPost('');
     const popup = document.querySelector('.popup');
     if (popup.style.display === 'none') {
       popup.style.display = 'block';
@@ -62,14 +66,14 @@ function Feed() {
     const response = await fetch('/feed', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tweet: tweet, username: username})
+      body: JSON.stringify({ tweet: post, username: username })
     });
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     window.location.reload();
   };  
 
-  const isTweetEmpty = tweet === '';
+  const isTweetEmpty = post === '';
 
   if (loading) {
     return (<div>loading...</div>)
@@ -78,16 +82,6 @@ function Feed() {
   return (
     <div className="feed-container">
       <div className="feed-search">
-        <div className="feed-search-bar">
-          <svg viewBox="0 0 1024 1024" className="feed-icon">
-            <path d="M406 598q80 0 136-56t56-136-56-136-136-56-136 56-56 136 56 136 136 56zM662 598l212 212-64 64-212-212v-34l-12-12q-76 66-180 66-116 0-197-80t-81-196 81-197 197-81 196 81 80 197q0 42-20 95t-46 85l12 12h34z"></path>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search Twitter"
-            className="feed-textinput input"
-          />
-        </div>
         <div className="feed-card1">
         <a class="twitter-timeline" data-lang="en" data-width="250" data-height="400" data-theme="light" href="https://twitter.com/Twitter?ref_src=twsrc%5Etfw">Tweets by Twitter</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div>
@@ -204,7 +198,7 @@ function Feed() {
             type="text"
             placeholder="What's Happening..."
             className="feed-textinput1 input"
-            onChange={e => setTweet(e.target.value)}
+            onChange={e => setPost(e.target.value)}
           />
         </div>
         <div className="feed-icon-container">
@@ -278,10 +272,36 @@ function Feed() {
           </span>
         </button>
       </div>
+      <div className="feed-tweet1">
+        <div className="feed-box1" style={{opacity: tweets && tweets.length > 0 ? 100: 0}}>
+          <div className="my-tweets">
+            {tweets && tweets.length > 0 ? (
+              [...tweets].reverse().map((tweet) => (
+                <div className="my-tweet">
+                  <div className="tweet-header">
+                    <div className="tweet-image"></div>
+                    <div className="tweet-username">{tweet.user.username}</div>
+                    <div className="tweet-date">
+                    {new Date(tweet.created).toLocaleDateString('default', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </div>
+                  </div>
+                  <div className="tweet-content">{tweet.tweet}</div>
+                </div>
+              ))
+            ) : (
+              <div></div>
+            )}
+          </div>
+        </div>
+      </div>
       <div class="popup">
         <div class="popup-content">
           <form>
-            <textarea id="tweet-text" name="tweet" placeholder="What's happening..." onChange={e => setTweet(e.target.value)}></textarea>
+            <textarea id="tweet-text" name="tweet" placeholder="What's happening..." onChange={e => setPost(e.target.value)}></textarea>
             <div class="popup-buttons">
               <button class="popup-button" type="button" onClick={toggle}>Cancel</button>
               <button class="popup-button" type="button" onClick={handleSubmit} disabled={isTweetEmpty}>Tweet</button>

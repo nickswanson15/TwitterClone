@@ -82,7 +82,6 @@ function Settings() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data.message)
       window.location.reload();
     } else {
       setMessage(data.message);
@@ -98,7 +97,6 @@ function Settings() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data.message)
       window.location.reload();
     } else {
       setMessage(data.message);
@@ -113,7 +111,7 @@ function Settings() {
       body: JSON.stringify({ username: username })
     });
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     window.location.reload();
   }; 
 

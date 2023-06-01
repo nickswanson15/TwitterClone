@@ -19,8 +19,7 @@ function Signup() {
     });
     const data = await response.json();
     if (response.ok) {
-      console.log(data.message)
-      navigate('/login')
+      navigate('/login');
     } else {
       setMessage(data.message);
     }

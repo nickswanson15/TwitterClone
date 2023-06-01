@@ -170,6 +170,47 @@ app.post('/feed', async (req, res) => {
       res.status(500).json({ message: 'error tweeting...' });
   }
 });
+// Define the search route
+app.post('/search', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const query = req.body.query;
+      const regex = new RegExp(query, 'i');
+      const currentUser = req.user;
+      const users = await User.find({ _id: { $ne: currentUser._id }, username: { $regex: regex }}).lean();
+      const tweets = await Tweet.find({ user: { $ne: currentUser._id }, tweet: { $regex: regex }}).populate('user').lean();
+      res.status(200).json({ users: users, tweets: tweets });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'error searching...' });
+    }
+  } else {
+    res.status(401).json({ message: 'unauthorized' });
+  }
+});
+
+// Define the follow user route
+app.post('/follow', async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user.id);
+    const userToFollow = await User.findById(req.body.userId);
+    if (!userToFollow) {
+      return res.status(404).json({ message: 'user not found.' });
+    }
+    if (currentUser.following.includes(userToFollow.id)) {
+      return res.status(400).json({ message: 'user already followed.' });
+    }
+    currentUser.following.push(userToFollow.id);
+    userToFollow.followers.push(currentUser.id);
+    await currentUser.save();
+    await userToFollow.save();
+    res.status(200).json({ message: 'user followed!' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'error following...' });
+  }
+});
+
 // Define the delete tweet route
 app.post('/delete-tweet', async (req, res) => {
   try {
@@ -177,7 +218,7 @@ app.post('/delete-tweet', async (req, res) => {
       res.status(200).json({ message: 'deleted!' });
   } catch (err) {
       console.log(err)
-      res.status(500).json({ message: 'error deleting...' });
+      res.status(500).json({ message: 'error deleting tweet...' });
   }
 });
 
@@ -225,16 +266,23 @@ app.post('/delete-account', async (req, res) => {
       res.status(200).json({ message: 'deleted!' });
   } catch (err) {
     console.log(err)
-      res.status(500).json({ message: 'error deleting...' });
+      res.status(500).json({ message: 'error deleting account...' });
   }
 });
 
 // Define the feed route
-app.get('/feed', (req, res) => {
+app.get('/feed', async (req, res) => {
   if (req.isAuthenticated()) {
-    res.status(200).json({ user: req.user });
+    try {
+      const currentUser = await User.findById(req.user.id).populate('following', 'username');
+      const followingUserIds = currentUser.following.map(user => user.id);
+      const tweets = await Tweet.find({ user: { $in: followingUserIds } }).sort({ created: -1 }).lean();
+      res.status(200).json({ user: req.user, tweets });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'error loading feed...' });
+    }
   } else {
-    console.log("unauthorized");
     res.status(401).json({ message: 'unauthorized' });
   }
 });
@@ -247,11 +295,27 @@ app.get('/profile', async (req, res) => {
       res.status(200).json({ user: req.user, tweets });
     } catch (err) {
       console.log(err)
-      res.status(500).json({ message: 'error retrieving profile data' });
+      res.status(500).json({ message: 'error retrieving profile data...' });
   
     }
   } else {
-    console.log("unauthorized");
+    res.status(401).json({ message: 'unauthorized' });
+  }
+});
+
+// Define the explore route
+app.get('/explore', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const currentUser = req.user;
+      const users = await User.find({ _id: { $ne: currentUser._id } }).limit(5).lean();
+      const tweets = await Tweet.find({ user: { $ne: currentUser._id } }).populate('user').limit(50).lean();
+      res.status(200).json({ users, tweets });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'error retrieving explore data...' });
+    }
+  } else {
     res.status(401).json({ message: 'unauthorized' });
   }
 });
@@ -260,7 +324,6 @@ app.get('/profile', async (req, res) => {
 app.get('/logout', function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
-    console.log("logged out")
     res.status(200).json({ message: 'logged out' });
   });
 });

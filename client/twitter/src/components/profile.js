@@ -54,14 +54,14 @@ function Profile() {
       body: JSON.stringify({ deleteID: deleteID })
     });
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     window.location.reload();
   };  
 
   const handleLogout = async () => {
     try {
       fetch('/logout');
-      navigate('/')
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
@@ -75,16 +75,6 @@ function Profile() {
   return (
     <div className="feed-container">
     <div className="feed-search">
-      <div className="feed-search-bar">
-        <svg viewBox="0 0 1024 1024" className="feed-icon">
-          <path d="M406 598q80 0 136-56t56-136-56-136-136-56-136 56-56 136 56 136 136 56zM662 598l212 212-64 64-212-212v-34l-12-12q-76 66-180 66-116 0-197-80t-81-196 81-197 197-81 196 81 80 197q0 42-20 95t-46 85l12 12h34z"></path>
-        </svg>
-        <input
-          type="text"
-          placeholder="Search Twitter"
-          className="feed-textinput input"
-        />
-      </div>
       <div className="feed-card1">
       <a class="twitter-timeline" data-lang="en" data-width="250" data-height="400" data-theme="light" href="https://twitter.com/Twitter?ref_src=twsrc%5Etfw">Tweets by Twitter</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
@@ -210,7 +200,7 @@ function Profile() {
           <div className="following">0 Following</div>
           <div className="followers">0 Followers</div>
         </div>
-        <div className="my-tweets">
+        <div className="my-tweets" style={{opacity: tweets && tweets.length > 0 ? 100: 0}}>
           {tweets && tweets.length > 0 ? (
             [...tweets].reverse().map((tweet) => (
               <div className="my-tweet">
