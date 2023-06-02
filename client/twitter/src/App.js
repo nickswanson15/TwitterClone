@@ -9,6 +9,7 @@ import Notifications from './components/notifications';
 import TwitterBlue from './components/twitterblue';
 import Settings from './components/settings';
 import Profile from './components/profile';
+import UserProfile from './components/userprofile';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/twitterblue" element={<TwitterBlue />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:id" element={<UserProfile />} />
         </Routes>
       </div>
     </Router>
@@ -32,5 +34,3 @@ function App() {
 }
 
 export default App;
-
-

@@ -187,6 +187,7 @@ function Explore() {
         <div className="my-tweets">
           {users && users.length > 0 ? (
             [...users].map((user) => (
+              <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/profile/${user._id}`} key={user._id}>
               <div className="my-tweet">
                 <div className="tweet-header">
                   <div className="tweet-image"></div>
@@ -194,6 +195,7 @@ function Explore() {
                 </div>
                 <div className="tweet-content"></div>
               </div>
+              </Link>
             ))
           ) : (
             <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no users found...</div>
@@ -202,6 +204,7 @@ function Explore() {
         <div className="my-tweets">
           {tweets && tweets.length > 0 ? (
             [...tweets].reverse().map((tweet) => (
+              <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/profile/${tweet.user._id}`} key={tweet._id}>
               <div className="my-tweet">
                 <div className="tweet-header">
                   <div className="tweet-image"></div>
@@ -216,6 +219,7 @@ function Explore() {
                 </div>
                 <div className="tweet-content">{tweet.tweet}</div>
               </div>
+              </Link>
             ))
           ) : (
             <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no tweets found...</div>

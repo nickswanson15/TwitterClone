@@ -198,7 +198,13 @@ app.post('/follow', async (req, res) => {
       return res.status(404).json({ message: 'user not found.' });
     }
     if (currentUser.following.includes(userToFollow.id)) {
-      return res.status(400).json({ message: 'user already followed.' });
+      const currentUserIndex = currentUser.following.indexOf(userToFollow.id);
+      const userToFollowIndex = userToFollow.followers.indexOf(currentUser.id);
+      currentUser.following.splice(currentUserIndex, 1);
+      userToFollow.followers.splice(userToFollowIndex, 1);
+      await currentUser.save();
+      await userToFollow.save();
+      return res.status(200).json({ message: 'user unfollowed!' });
     }
     currentUser.following.push(userToFollow.id);
     userToFollow.followers.push(currentUser.id);
@@ -207,7 +213,7 @@ app.post('/follow', async (req, res) => {
     res.status(200).json({ message: 'user followed!' });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: 'error following...' });
+    res.status(500).json({ message: 'error following / unfollowing...' });
   }
 });
 
@@ -276,7 +282,7 @@ app.get('/feed', async (req, res) => {
     try {
       const currentUser = await User.findById(req.user.id).populate('following', 'username');
       const followingUserIds = currentUser.following.map(user => user.id);
-      const tweets = await Tweet.find({ user: { $in: followingUserIds } }).sort({ created: -1 }).lean();
+      const tweets = await Tweet.find({ user: { $in: followingUserIds } }).sort({ created: -1 }).populate('user').lean();
       res.status(200).json({ user: req.user, tweets });
     } catch (err) {
       console.log(err);
@@ -308,12 +314,29 @@ app.get('/explore', async (req, res) => {
   if (req.isAuthenticated()) {
     try {
       const currentUser = req.user;
-      const users = await User.find({ _id: { $ne: currentUser._id } }).limit(5).lean();
-      const tweets = await Tweet.find({ user: { $ne: currentUser._id } }).populate('user').limit(50).lean();
+      const users = await User.find({ _id: { $ne: currentUser._id } }).limit(20).lean();
+      const tweets = await Tweet.find({ user: { $ne: currentUser._id } }).populate('user').limit(20).lean();
       res.status(200).json({ users, tweets });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: 'error retrieving explore data...' });
+    }
+  } else {
+    res.status(401).json({ message: 'unauthorized' });
+  }
+});
+
+app.get('/profile/:id', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const userId = (req.params.id);
+      const currentUser = req.user;
+      const user = await User.find({ _id: userId });
+      const tweets = await Tweet.find({ user: userId }).lean();
+      res.status(200).json({ currentUser: currentUser, user: user[0], tweets });
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ message: 'error retrieving profile data...' });
     }
   } else {
     res.status(401).json({ message: 'unauthorized' });

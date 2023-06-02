@@ -408,16 +408,19 @@
   margin-top: 100px;
 }
 .my-tweets {
-  border-top: .1px solid grey;
-  border-left: .1px solid grey;
-  border-right: .1px solid grey;
+  border-top: .1px solid #bdbdbd;
+  border-left: .1px solid #bdbdbd;
+  border-right: .1px solid #bdbdbd;
 }
 .my-tweet {
   left: 400px;
   width: 600px;
   padding-top: 20px;
   padding-left: 15px;
-  border-bottom: .1px solid grey;
+  border-bottom: .1px solid #bdbdbd;
+}
+.my-tweet:hover {
+  background-color: #f4f4f4;
 }
 .tweet-header {
   display: flex;
@@ -431,6 +434,7 @@
 }
 .tweet-username {
   font-weight: bold;
+  font-size: 15px;
   padding-left: 15px;
 }
 .tweet-date {

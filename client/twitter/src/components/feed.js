@@ -1,22 +1,24 @@
 /*
 TODO:
 
+all:
 delete and double click
 name / tweet too long
 
-link users to profile page in explore,
-make profiles for all users,
-follow user by clicking button in profile and making post request to follow route.
+fri:
+split explore page.
+click on following.
 
-link users to profile page in main,
-main feed tweets (only from following) and like / retweet.
+sat:
+like / retweet / reply.
+Notifications (likes, retweets, replies).
 
-Notifications (likes, retweets).
+sun:
 Twitter Blue (stripe).
-
 Route Protection (where necessary).
 
-Images?
+all:
+Images / Polls?
 */
 
 import './style.css';
@@ -191,7 +193,7 @@ function Feed() {
           </span>
         </button>
       </div>
-      <div className="feed-tweet">
+      <div style={{"z-index": "999"}}className="feed-tweet">
         <div className="feed-tweet-text">
           <input
             id = "tweetinput1"
@@ -277,6 +279,7 @@ function Feed() {
           <div className="my-tweets">
             {tweets && tweets.length > 0 ? (
               [...tweets].reverse().map((tweet) => (
+                <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/profile/${tweet.user._id}`} key={tweet._id}>
                 <div className="my-tweet">
                   <div className="tweet-header">
                     <div className="tweet-image"></div>
@@ -291,6 +294,7 @@ function Feed() {
                   </div>
                   <div className="tweet-content">{tweet.tweet}</div>
                 </div>
+                </Link>
               ))
             ) : (
               <div></div>

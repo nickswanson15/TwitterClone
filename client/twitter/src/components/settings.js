@@ -136,7 +136,7 @@ function Settings() {
       </div>
       <div class="popup1">
         <div class="popup-content1">
-        <div className="usernameTitle">Change Your Username</div>
+        <div className="usernameTitle">Change Username</div>
         <div className="message">current username: {username}</div>
         {message && <div className="message" style={{ color: 'red'}}>{message}</div>}
           <form>
@@ -151,7 +151,7 @@ function Settings() {
       </div>
       <div class="popup2">
         <div class="popup-content2">
-          <div className="passwordTitle">Change Your Password</div>
+          <div className="passwordTitle">Change Password</div>
           {message && <div className="message" style={{ color: 'red'}}>{message}</div>}
           <form>
             <input id="password-text1" name="password" placeholder="new password..." onChange={e => setNewPassword(e.target.value)}></input>

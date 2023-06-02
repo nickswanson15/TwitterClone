@@ -1,24 +1,32 @@
 import './style.css';
-import './profile.css';
+import './userprofile.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 
-function Profile() {
+function UserProfile() {
   const navigate = useNavigate();
+  const [follower, setFollower] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [user, setUser] = useState(null);
   const [username, setUsername] = useState(null);
   const [date, setDate] = useState(null);
   const [followers, setFollowers] = useState(null);
   const [following, setFollowing] = useState(null);
   const [tweets, setTweets] = useState(null);
-  const [deleteID, setDeleteID] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/profile');
-        const data = await response.json();
+        const path = window.location.pathname;
+        const segments = path.split('/');
+        const userId = segments[segments.length - 1];
+        const response = await fetch(`/profile/${userId}`);
+        const data = await response.json();    
         if (response.ok) {
+          setFollower(data.user.followers);
+          setCurrentUserId(data.currentUser._id);
+          setUser(data.user._id);
           setUsername(data.user.username);
           const date = new Date(data.user.created);
           const month = date.toLocaleString('default', { month: 'long' });
@@ -40,27 +48,17 @@ function Profile() {
     fetchData();
   }, [navigate]);
 
-  const toggle = async (event) => {
-    const popup = document.querySelector('.popup');
-    if (popup.style.display === 'none') {
-      setDeleteID(event.target.id);
-      popup.style.display = 'block';
-    } else {
-      popup.style.display = 'none';
-    }
-  };
-
-  const handleDelete = async (event) => {
+  const handleFollow = async (event) => {
     event.preventDefault();
-    const response = await fetch('/delete-tweet', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ deleteID: deleteID })
+    const response = await fetch('/follow', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: user })
     });
     const data = await response.json();
     console.log(data);
     window.location.reload();
-  };  
+  }; 
 
   const handleLogout = async () => {
     try {
@@ -121,7 +119,7 @@ function Profile() {
           </div>
         </div>
         <span>
-        <Link className="feed-text02" to="/explore">Explore</Link>
+        <Link className="feed-text" to="/explore">Explore</Link>
         </span>
       </div>
       <div className="feed-notifications">
@@ -160,7 +158,7 @@ function Profile() {
             />
           </div>
         </div>
-        <div><Link className="feed-text" to="/profile">Profile</Link></div>
+        <div><Link className="feed-text02" to="/profile">Profile</Link></div>
       </div>
       <div className="feed-settings">
         <div className="feed-setting">
@@ -198,7 +196,16 @@ function Profile() {
           />
         </div>
         <div className="profile-image"></div>
-        <div className="profile-username">{username}</div>
+        <div  style={{"display": "flex"}}>
+            <div className="profile-username">{username}</div>
+            <button className={(follower.includes(currentUserId)) ? "follow-button1" : "follow-button2"} onClick={handleFollow}>
+                <span className="feed-text04">
+                    <span>
+                    {(follower.includes(currentUserId)) ? <span>Following</span> : <span>Follow</span>}
+                    </span>
+                </span>
+            </button>
+        </div>
         <div className="profile-date">Joined {date}</div>
         <div className="profile-connections">
           <div className="following">{followers} Followers</div>
@@ -218,12 +225,6 @@ function Profile() {
                       year: 'numeric',
                     })}
                   </div>
-                  <div id={tweet._id} className="delete" onClick={toggle}>
-                    <img
-                    alt=""
-                    src="/images/image7.svg"
-                    />
-                  </div>
                 </div>
                 <div className="tweet-content">{tweet.tweet}</div>
               </div>
@@ -234,19 +235,8 @@ function Profile() {
         </div>
       </div>
     </div>
-    <div class="popup">
-        <div class="popup-content">
-          <form>
-            <div id="delete-text">Are you sure you want to delete this tweet?</div>
-            <div class="popup-buttons">
-              <button class="popup-button" type="button" onClick={toggle}>Cancel</button>
-              <button class="popup-button-delete" type="button" onClick={handleDelete}>Delete</button>
-            </div>
-          </form>
-        </div>
-      </div>
   </div>
   );
 }
 
-export default Profile;
+export default UserProfile;
