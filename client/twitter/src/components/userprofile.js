@@ -201,7 +201,7 @@ function UserProfile() {
             <button className={(follower.includes(currentUserId)) ? "follow-button1" : "follow-button2"} onClick={handleFollow}>
                 <span className="feed-text04">
                     <span>
-                    {(follower.includes(currentUserId)) ? <span>Following</span> : <span>Follow</span>}
+                    {(follower.includes(currentUserId)) ? <span style={{"color": "grey"}}>Following</span> : <span>Follow</span>}
                     </span>
                 </span>
             </button>

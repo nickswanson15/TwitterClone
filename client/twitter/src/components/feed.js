@@ -2,12 +2,12 @@
 TODO:
 
 all:
-delete and double click
-name / tweet too long
+delete and double click.
+name / tweet too long.
 
 fri:
 split explore page.
-click on following.
+click on followers / following.
 
 sat:
 like / retweet / reply.
@@ -16,6 +16,10 @@ Notifications (likes, retweets, replies).
 sun:
 Twitter Blue (stripe).
 Route Protection (where necessary).
+
+mon:
+profile picture.
+bio, location, followed by...
 
 all:
 Images / Polls?

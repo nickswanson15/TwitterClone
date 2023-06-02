@@ -450,13 +450,12 @@
   padding-left: 25px;
   padding-right: 25px;
   border: none;
-  background: none;
-  color: inherit;
   font: inherit;
   cursor: pointer;
-  outline: none;
+  outline: 2px solid #bdbdbd;
   border-radius: 100px;
-  background-color: var(--dl-color-default-twitterblue);
+  color: black;
+  background: white;
 }
 .follow-button2 {
   display: flex;
@@ -471,15 +470,17 @@
   padding-right: 25px;
   border: none;
   background: none;
-  color: inherit;
   font: inherit;
   cursor: pointer;
   outline: none;
   border-radius: 100px;
   background-color: var(--dl-color-default-twitterblue);
 }
-.follow-button:hover {
-  opacity: 95%;
+.follow-button1:hover {
+  opacity: 90%;
+}
+.follow-button2:hover {
+  opacity: 90%;
 }
 .profile-date {
     height: 20px;
