@@ -517,6 +517,8 @@
 }
 .tweet-header {
     display: flex;
+    align-items: center;
+    justify-content: left;
 }
 .tweet-image {
     height: 25px;
@@ -542,6 +544,72 @@
     margin-bottom: 20px;
     margin-left: 40px;
     margin-right: 40px;
+    max-width: 600px;
+    overflow-wrap: break-word;
+}
+.tweet-actions {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+#like { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+} 
+#retweet { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+} 
+#reply { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+#like:hover { 
+  fill: hotpink;
+} 
+#retweet:hover { 
+  fill: #08bc7f;
+}
+#reply:hover { 
+  fill: var(--dl-color-default-twitterblue);
+}
+#unlike { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  fill: hotpink;
+} 
+#unretweet { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  fill: #08bc7f;
+} 
+#unlike:hover { 
+  fill: black;
+} 
+#unretweet:hover { 
+  fill: black;
 }
 @media(max-width: 1400px) {
     .feed-search {

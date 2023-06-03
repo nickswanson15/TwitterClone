@@ -32,11 +32,10 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  margin-top: 45px;
+  margin-top: 5px;
   padding-left: 100px;
   width: 600px;
   height: 48px;
-  display: flex;
   border-radius: 100px;
   background-color: #E7ECF0;
 }
@@ -398,6 +397,31 @@
 .feed-main-logout-button:hover {
   opacity: 95%;
 }
+.select {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  position: absolute;
+  width: 601px;
+  height: 100px;
+  padding-top: 50px;
+  border: .1px solid #bdbdbd;
+}
+#select1{
+  margin: 10px;
+  color: black;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  border-bottom: 5px solid var(--dl-color-default-twitterblue);
+}
+#select2{
+  margin: 10px;
+  color: grey;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
 .feed-tweet2 {
   top: 0px;
   left: 400px;
@@ -405,7 +429,7 @@
   position: absolute;
 }
 .feed-box2 {
-  margin-top: 100px;
+  margin-top: 80px;
 }
 .my-tweets {
   border-top: .1px solid #bdbdbd;
@@ -424,6 +448,8 @@
 }
 .tweet-header {
   display: flex;
+  align-items: center;
+  justify-content: left;
 }
 .tweet-image {
   height: 25px;
@@ -449,6 +475,64 @@
   margin-bottom: 20px;
   margin-left: 40px;
   margin-right: 40px;
+  overflow-wrap: break-word;
+}
+#like { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+} 
+#retweet { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+} 
+#reply { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+#like:hover { 
+  fill: hotpink;
+} 
+#retweet:hover { 
+  fill: #08bc7f;
+}
+#reply:hover { 
+  fill: var(--dl-color-default-twitterblue);
+}
+#unlike { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  fill: hotpink;
+} 
+#unretweet { 
+  cursor: pointer;
+  position: relative;
+  width: 20px; 
+  height: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  fill: #08bc7f;
+} 
+#unlike:hover { 
+  fill: black;
+} 
+#unretweet:hover { 
+  fill: black;
 }
 @media(max-width: 1400px) {
   .feed-search {
