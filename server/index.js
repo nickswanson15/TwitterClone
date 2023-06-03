@@ -56,6 +56,8 @@ const userSchema = new mongoose.Schema({
   
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet' }],
+  retweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet' }],
 
   created: {
     type: Date,
@@ -73,6 +75,14 @@ const tweetSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  retweets: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   created: {
     type: Date,
     default: Date.now
@@ -136,6 +146,7 @@ app.post('/signup', async (req, res) => {
       await newUser.save();
       res.status(200).json({ message: 'account created!' });
   } catch (err) {
+      console.log(err)
       res.status(500).json({ message: 'error signing up...' });
   }
 });
@@ -217,14 +228,80 @@ app.post('/follow', async (req, res) => {
   }
 });
 
+// Define the like route
+app.post('/like', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const tweetId = req.body.tweetId;
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet) {
+      return res.status(404).json({ message: 'tweet not found.' });
+    }
+    if (tweet.likes.includes(userId)) {
+      const userIndex = tweet.likes.indexOf(userId);
+      tweet.likes.splice(userIndex, 1);
+      await tweet.save();
+      res.status(200).json({ message: 'unliked!' });
+    } else {
+      tweet.likes.push(userId);
+      await tweet.save();
+      res.status(200).json({ message: 'liked!' });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'error liking...' });
+  }
+});
+
+// Define the retweet route
+app.post('/retweet', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const tweetId = req.body.tweetId;
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet) {
+      return res.status(404).json({ message: 'tweet not found.' });
+    }
+    if (tweet.retweets.includes(userId)) {
+      const userIndex = tweet.retweets.indexOf(userId);
+      tweet.retweets.splice(userIndex, 1);
+      await tweet.save();
+      const currentUser = await User.findById(userId);
+      if (currentUser.retweets.includes(tweetId)) {
+        const tweetIndex = currentUser.retweets.indexOf(tweetId);
+        currentUser.retweets.splice(tweetIndex, 1);
+        await currentUser.save();
+      }
+      res.status(200).json({ message: 'unretweeted!' });
+    } else {
+      tweet.retweets.push(userId);
+      await tweet.save();
+      const currentUser = await User.findById(userId);
+      if (!currentUser.retweets.includes(tweetId)) {
+        currentUser.retweets.push(tweetId);
+        await currentUser.save();
+      }
+      res.status(200).json({ message: 'retweeted!' });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'error retweeting...' });
+  }
+});
+
 // Define the delete tweet route
 app.post('/delete-tweet', async (req, res) => {
   try {
-      await Tweet.findOneAndDelete({ _id: req.body.deleteID });
-      res.status(200).json({ message: 'deleted!' });
+    const deleteID = req.body.deleteID;
+    const tweet = await Tweet.findOne({ _id: deleteID });
+    for (const userId of tweet.retweets) {
+      await User.findByIdAndUpdate(userId, { $pull: { retweets: deleteID } });
+    }
+    await Tweet.findOneAndDelete({ _id: deleteID });
+    res.status(200).json({ message: 'deleted!' });
   } catch (err) {
-      console.log(err)
-      res.status(500).json({ message: 'error deleting tweet...' });
+    console.log(err);
+    res.status(500).json({ message: 'error deleting tweet...' });
   }
 });
 
@@ -233,6 +310,9 @@ app.post('/username', async (req, res) => {
   try {
       if (req.body.username1 != req.body.username2) {
         return res.status(301).json({ message: 'usernames do not match!' });
+      }
+      if (req.body.username1.length > 40) {
+        return res.status(301).json({ message: 'username is too long!' });
       }
       const existingUser = await User.findOne({ username: req.body.username1 });
       if (existingUser) {
@@ -268,11 +348,33 @@ app.post('/password', async (req, res) => {
 // Define the delete account route
 app.post('/delete-account', async (req, res) => {
   try {
-      await User.findOneAndDelete({ username: req.body.username });
-      res.status(200).json({ message: 'deleted!' });
+    const username = req.body.username;
+    const user = await User.findOne({ username });
+    for (const followerId of user.followers) {
+      const follower = await User.findById(followerId);
+      const followerIndex = follower.following.indexOf(user._id);
+      follower.following.splice(followerIndex, 1);
+      await follower.save();
+    }
+    for (const followingId of user.following) {
+      const following = await User.findById(followingId);
+      const followingIndex = following.followers.indexOf(user._id);
+      following.followers.splice(followingIndex, 1);
+      await following.save();
+    }
+    const userTweets = await Tweet.find({ user: user._id });
+    for (const tweet of userTweets) {
+      await Tweet.updateMany(
+        { _id: tweet._id },
+        { $pull: { retweets: user._id } }
+      );
+    }
+    await Tweet.deleteMany({ user: user._id });
+    await User.findOneAndDelete({ username });
+    res.status(200).json({ message: 'deleted!' });
   } catch (err) {
-    console.log(err)
-      res.status(500).json({ message: 'error deleting account...' });
+    console.log(err);
+    res.status(500).json({ message: 'error deleting account...' });
   }
 });
 
@@ -282,7 +384,7 @@ app.get('/feed', async (req, res) => {
     try {
       const currentUser = await User.findById(req.user.id).populate('following', 'username');
       const followingUserIds = currentUser.following.map(user => user.id);
-      const tweets = await Tweet.find({ user: { $in: followingUserIds } }).sort({ created: -1 }).populate('user').lean();
+      const tweets = await Tweet.find({ $or: [{ user: { $in: followingUserIds } }, { _id: { $in: currentUser.retweets } }] }).populate('user');
       res.status(200).json({ user: req.user, tweets });
     } catch (err) {
       console.log(err);
@@ -297,7 +399,9 @@ app.get('/feed', async (req, res) => {
 app.get('/profile', async (req, res) => {
   if (req.isAuthenticated()) {
     try {
-      const tweets = await Tweet.find({ user: req.user.id }).lean()
+      const userId = req.user.id;
+      const user = await User.findById(userId);
+      const tweets = await Tweet.find({ $or: [{ user: userId }, { _id: { $in: user.retweets } }] }).populate('user');
       res.status(200).json({ user: req.user, tweets });
     } catch (err) {
       console.log(err)
@@ -314,9 +418,9 @@ app.get('/explore', async (req, res) => {
   if (req.isAuthenticated()) {
     try {
       const currentUser = req.user;
-      const users = await User.find({ _id: { $ne: currentUser._id } }).limit(20).lean();
-      const tweets = await Tweet.find({ user: { $ne: currentUser._id } }).populate('user').limit(20).lean();
-      res.status(200).json({ users, tweets });
+      const users = await User.find({ _id: { $ne: currentUser._id } }).limit(20);
+      const tweets = await Tweet.find({ user: { $ne: currentUser._id } }).populate('user').limit(20);
+      res.status(200).json({ user: currentUser, users, tweets });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: 'error retrieving explore data...' });
@@ -325,14 +429,14 @@ app.get('/explore', async (req, res) => {
     res.status(401).json({ message: 'unauthorized' });
   }
 });
-
+// Define the user profile route
 app.get('/profile/:id', async (req, res) => {
   if (req.isAuthenticated()) {
     try {
       const userId = (req.params.id);
       const currentUser = req.user;
       const user = await User.find({ _id: userId });
-      const tweets = await Tweet.find({ user: userId }).lean();
+      const tweets = await Tweet.find({ $or: [{ user: userId }, { _id: { $in: user.retweets } }] }).populate('user');
       res.status(200).json({ currentUser: currentUser, user: user[0], tweets });
     } catch (err) {
       console.log(err)
@@ -349,6 +453,24 @@ app.get('/logout', function(req, res, next) {
     if (err) { return next(err); }
     res.status(200).json({ message: 'logged out' });
   });
+});
+
+// Stripe payment processing for Twitter Blue
+const stripe = require('stripe')(process.env.STRIPE);
+app.post('/checkout', async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price: 'price_1NEq93GjCmRHchXXq8KOaXGY',
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    success_url: `http://localhost:3000/stripe`,
+    cancel_url: `http://localhost:3000/twitterblue`,
+    automatic_tax: {enabled: true},
+  });
+  res.status(200).json({ message: session.url });
 });
 
 // Start the server
