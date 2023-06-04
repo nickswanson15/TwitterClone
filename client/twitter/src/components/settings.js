@@ -1,7 +1,7 @@
 import './style.css';
 import './settings.css';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Settings() {
   const navigate = useNavigate();
@@ -132,6 +132,7 @@ function Settings() {
           <button className="settings-button" onClick={toggle1}>Change Username</button>
           <button className="settings-button" onClick={toggle2}>Change Password</button>
           <button className="settings-button" onClick={toggle3}>Delete Account</button>
+          <Link to="/feed"><div id="back1"><img id="back-img1" alt="" src="/back.png"></img></div></Link>
         </div>
       </div>
       <div class="popup1">

@@ -10,6 +10,7 @@ import TwitterBlue from './components/twitterblue';
 import Settings from './components/settings';
 import Profile from './components/profile';
 import UserProfile from './components/userprofile';
+import Tweet from './components/tweet';
 
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:id" element={<UserProfile />} />
+          <Route path="/tweet/:id" element={<Tweet />} />
+
         </Routes>
       </div>
     </Router>

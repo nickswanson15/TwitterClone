@@ -27,13 +27,16 @@
     flex-direction: column;
     justify-content: flex-start;
   }
-  .feed-search-bar {
-    width: 280px;
-    height: 48px;
+  .feed-search-bar1 {
     display: flex;
     align-items: center;
-    border-radius: 100px;
     justify-content: center;
+    position: absolute;
+    margin-top: 5px;
+    padding-left: 100px;
+    width: 600px;
+    height: 48px;
+    border-radius: 100px;
     background-color: #E7ECF0;
   }
   .feed-icon {
@@ -394,6 +397,76 @@
   .feed-main-logout-button:hover {
     opacity: 95%;
   }
+  #prompt {
+    width: 600px;
+    margin-top: 164px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    position: absolute;
+    color: grey;
+    fill: gray;
+    border: .1px solid #bdbdbd;
+  }
+  #prompt:hover{
+    color: black;
+    fill: black;
+  }
+  .popup-content1 {
+    background-color: white;
+    padding: 20px;
+    width: 455px;
+    position: absolute;
+    top: 50%;
+    left: 48.6%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+#delete-text1 {
+    width: 100%;
+    height: 100px;
+    font-size: 1.2rem;
+    border: none;
+    resize: none;
+    outline: none;
+}
+.popup-buttons1 {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+} 
+.popup-button1 {
+  border: none;
+  font-size: 15px;
+  font-style: Bold;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  width: 88px;
+  height: 32px;
+  border-radius: 100px;
+  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.0799);
+  background-color: var(--dl-color-default-twitterblue);
+}
+.popup-button-delete1 {
+  border: none;
+  font-size: 15px;
+  font-style: Bold;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  width: 88px;
+  height: 32px;
+  border-radius: 100px;
+  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.0799);
+  background-color: var(--dl-color-danger-300);
+}
+.popup-button1:hover {
+  opacity: 95%;
+}
   .popup {
     display: none;
     position: fixed;
@@ -415,254 +488,166 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
-  #tweet-text {
-    width: 100%;
-    height: 100px;
-    font-size: 1.2rem;
+  .popup-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  } 
+  .popup-button {
     border: none;
-    resize: none;
-    outline: none;
-    margin-bottom: 100px;
+    font-size: 15px;
+    font-style: Bold;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    width: 88px;
+    height: 32px;
+    border-radius: 100px;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.0799);
+    background-color: var(--dl-color-default-twitterblue);
   }
-  .feed-tweet {
+  .popup-button:hover {
+    opacity: 95%;
+  }
+  .select {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: absolute;
+    width: 601px;
+    height: 100px;
+    padding-top: 50px;
+    border: .1px solid #bdbdbd;
+  }
+  #select1{
+    margin: 10px;
+    color: black;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 5px solid var(--dl-color-default-twitterblue);
+  }
+  #select2{
+    margin: 10px;
+    color: grey;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .feed-tweet2 {
     top: 0px;
     left: 400px;
-    width: 600px;
-    height: 170px;
     display: flex;
     position: absolute;
-    min-width: 600px;
-    align-self: center;
-    align-items: flex-start;
-    flex-direction: row;
-    justify-content: flex-start;
   }
-  .feed-box {
-    height: 360px;
-    border-left: .1px solid grey;
-    border-right: .1px solid grey;
-    border-bottom: .1px solid grey;
-  }
-.profile-header {
-    z-index:-999;
-    display: flex;
-    height: 170px;
-    width: 600px;
-    min-width: 600px;
+  .feed-box3 {
     position: absolute;
-}
-.profile-image {
-    margin-left: 15px;
-    margin-top: 120px;
-    height: 100px;
-    width: 100px;
-    border-radius: 100%;
-    border: .1px solid black;
-    background-color: white;
-}
-.profile-username {
-    font-size: 20px;
-    font-weight: bold;
-    height: 20px;
+    margin-top: 188px;
+  }
+  .my-tweets {
+    border-top: .1px solid #bdbdbd;
+    border-left: .1px solid #bdbdbd;
+    border-right: .1px solid #bdbdbd;
+  }
+  .my-tweet {
+    left: 400px;
+    width: 600px;
     padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 10px;
-}
-.follow-button1 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 190px;
-  margin-left: 450px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 25px;
-  padding-right: 25px;
-  border: none;
-  font: inherit;
-  cursor: pointer;
-  outline: 2px solid black;
-  border-radius: 100px;
-  color: black;
-  background: white;
-}
-.follow-button2 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 190px;
-  margin-left: 475px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 25px;
-  padding-right: 25px;
-  border: none;
-  background: none;
-  font: inherit;
-  cursor: pointer;
-  outline: none;
-  border-radius: 100px;
-  background-color: var(--dl-color-default-twitterblue);
-}
-.follow-button1:hover {
-  opacity: 90%;
-}
-.follow-button2:hover {
-  opacity: 90%;
-}
-.profile-date {
-    height: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-left: 10px;
-}
-.profile-connections {
-    display: flex;
-    height: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-.following {
-    padding-left: 10px;
-}
-.followers {
-    padding-left: 10px;
-}
-.my-tweets {
-    margin-top: 20px;
-    border-left: .1px solid grey;
-    border-right: .1px solid grey;
-}
-.my-tweet {
-  left: 400px;
-  width: 600px;
-  padding-top: 20px;
-  padding-left: 15px;
-  border-bottom: .1px solid #bdbdbd;
-}
-.my-tweet:hover {
-  background-color: #f4f4f4;
-}
-.tweet-header {
+    padding-left: 15px;
+    border-bottom: .1px solid #bdbdbd;
+  }
+  .my-tweet:hover {
+    background-color: #f4f4f4;
+  }
+  .tweet-header {
     display: flex;
     align-items: center;
     justify-content: left;
-}
-.tweet-image {
+  }
+  .tweet-image {
     height: 25px;
     width: 25px;
     border-radius: 100%;
     border: .1px solid black;
     background-color: white;
-}
-.tweet-username {
+  }
+  .tweet-username {
     font-weight: bold;
     font-size: 15px;
     padding-left: 15px;
-}
-.tweet-date {
+  }
+  .tweet-date {
     display: flex;
     align-items: center;
     font-size: 12px;
     padding-left: 15px;
     color: #bdbdbd;
-}
-.tweet-content {
+  }
+  .tweet-content {
     margin-top: 20px;
     margin-bottom: 20px;
     margin-left: 40px;
     margin-right: 40px;
-    max-width: 600px;
     overflow-wrap: break-word;
-}
-.tweet-actions {
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  margin-left: 20px;
-  margin-bottom: 10px;
-}
-.popup-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-} 
-.popup-button {
-  border: none;
-  font-size: 15px;
-  font-style: Bold;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-  width: 88px;
-  height: 32px;
-  border-radius: 100px;
-  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.0799);
-  background-color: var(--dl-color-default-twitterblue);
-}
-.popup-button:hover {
-  opacity: 95%;
-}
-#like { 
-  cursor: pointer;
-  position: relative;
-  width: 20px; 
-  height: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-} 
-#retweet { 
-  cursor: pointer;
-  position: relative;
-  width: 20px; 
-  height: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-} 
-#reply { 
-  cursor: pointer;
-  position: relative;
-  width: 20px; 
-  height: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-#like:hover { 
-  fill: hotpink;
-} 
-#retweet:hover { 
-  fill: #08bc7f;
-}
-#reply:hover { 
-  fill: var(--dl-color-default-twitterblue);
-}
-#unlike { 
-  cursor: pointer;
-  position: relative;
-  width: 20px; 
-  height: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-  fill: hotpink;
-} 
-#unretweet { 
-  cursor: pointer;
-  position: relative;
-  width: 20px; 
-  height: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-  fill: #08bc7f;
-} 
-#unlike:hover { 
-  fill: black;
-} 
-#unretweet:hover { 
-  fill: black;
-}
-@media(max-width: 1400px) {
+  }
+  #like { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  } 
+  #retweet { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  } 
+  #reply { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  #like:hover { 
+    fill: hotpink;
+  } 
+  #retweet:hover { 
+    fill: #08bc7f;
+  }
+  #reply:hover { 
+    fill: var(--dl-color-default-twitterblue);
+  }
+  #unlike { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    fill: hotpink;
+  } 
+  #unretweet { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    fill: #08bc7f;
+  } 
+  #unlike:hover { 
+    fill: black;
+  } 
+  #unretweet:hover { 
+    fill: black;
+  }
+  @media(max-width: 1400px) {
     .feed-search {
         width: 0%;
         height: 1000px;
@@ -670,9 +655,6 @@
         align-self: flex-end;
         flex-direction: column;
         justify-content: flex-start;
-    }
-    .feed-search-bar {
-        width: 0%;
     }
     .feed-card1 {
         width: 0%;
@@ -685,12 +667,12 @@
         height: 650px;
         align-self: flex-start;
     }
-}
-button:disabled {
+  }
+  button:disabled {
     opacity: 50%;
     cursor: auto;
-}
-button:disabled:hover {
+  }
+  button:disabled:hover {
     opacity: 50%;
     cursor: auto;
-}
+  }

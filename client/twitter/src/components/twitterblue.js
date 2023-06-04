@@ -1,6 +1,7 @@
 import "./style.css"
 import "./twitterblue.css"
 import React from 'react';
+import { Link } from "react-router-dom";
 
 function TwitterBlue() {
   const handleCheckout = async () => {
@@ -30,6 +31,7 @@ function TwitterBlue() {
           <div id="text">Blue.</div>
         </div>
       </div>
+      <Link to="/feed"><div id="back"><img id="back-img" alt ="" src="/back.png"></img></div></Link>
     </div>
   );
 }

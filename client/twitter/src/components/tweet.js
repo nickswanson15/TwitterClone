@@ -1,15 +1,15 @@
 import './style.css';
-import './explore.css';
+import './tweet.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 
-function Explore() {
+function Tweet() {
   const navigate = useNavigate();
+  const [exit, setExit] = useState(null);
   const [user, setUser] = useState(null);
-  const [search, setSearch] = useState(null);
-  const [select, setSelect] = useState(true);
+  const [username, setUsername] = useState(null);
+  const [main, setMain] = useState(null);
   const [tweets, setTweets] = useState(null);
-  const [users, setUsers] = useState(null);
   const [tweetId, setTweetId] = useState(null);
   const [reply, setReply] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,12 +17,16 @@ function Explore() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/explore');
+        const path = window.location.pathname;
+        const segments = path.split('/');
+        const tid = segments[segments.length - 1];
+        const response = await fetch(`/tweet/${tid}`);
         const data = await response.json();
         if (response.ok) {
           setUser(data.user._id);
-          setUsers(data.users);
-          setTweets(data.tweets);
+          setUsername(data.user.username);
+          setMain(data.tweet);
+          setTweets(data.tweet.replies);
           setLoading(false);
         } else {
           console.log(data.message);
@@ -45,17 +49,12 @@ function Explore() {
     }
   };
 
-  const handleSearch = async (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      const response = await fetch('/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: search })
-      });
-      const data = await response.json();
-      setUsers(data.users);
-      setTweets(data.tweets);
+  const toggle1 = async (event) => {
+    const popup1 = document.querySelector('.popup1');
+    if (popup1.style.display === 'none') {
+      popup1.style.display = 'block';
+    } else {
+      popup1.style.display = 'none';
     }
   };
   
@@ -93,7 +92,23 @@ function Explore() {
     const data = await response.json();
     console.log(data);
     window.location.reload();
-  }; 
+  };
+  
+  const handleDelete = async (event) => {
+    event.preventDefault();
+    const response = await fetch('/delete-tweet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deleteID: tweetId })
+    });
+    const data = await response.json();
+    console.log(data);
+    if(exit) {
+      navigate('/feed')
+    } else {
+      window.location.reload();
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -156,7 +171,7 @@ function Explore() {
           </div>
         </div>
         <span>
-        <Link className="feed-text" to="/explore">Explore</Link>
+        <Link className="feed-text02" to="/explore">Explore</Link>
         </span>
       </div>
       <div className="feed-notifications">
@@ -224,38 +239,42 @@ function Explore() {
       </button>
     </div>
     <div className="feed-tweet2">
-      <div className="feed-search-bar1" style={{"z-index": "999"}}>
-          <svg viewBox="0 0 1024 1024" className="feed-icon">
-            <path d="M406 598q80 0 136-56t56-136-56-136-136-56-136 56-56 136 56 136 136 56zM662 598l212 212-64 64-212-212v-34l-12-12q-76 66-180 66-116 0-197-80t-81-196 81-197 197-81 196 81 80 197q0 42-20 95t-46 85l12 12h34z"></path>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search Twitter"
-            className="feed-textinput input"
-            onChange={e => setSearch(e.target.value)}
-            onKeyDown={handleSearch}
-          />
-      </div>
-      <div className="select"><span onClick={() => setSelect(true)} id={select ? "select1" : "select2"}>tweets</span><span onClick={() => setSelect(false)} id={select ? "select2" : "select1"}>users</span></div>
-      <div className="feed-box2">
-      <div className="my-tweets" style={{ display: (select) ? "none" : "" }}>
-          {users && users.length > 0 ? (
-            [...users].map((user) => (
-              <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/profile/${user._id}`} key={user._id}>
-              <div className="my-tweet">
-                <div className="tweet-header">
-                  <div className="tweet-image"></div>
-                  <div className="tweet-username">{user.username}</div>
-                </div>
-                <div className="tweet-content"></div>
-              </div>
-              </Link>
-            ))
-          ) : (
-            <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no users found...</div>
-          )}
+
+      <div className="my-tweets">
+        <div className="my-tweet" onMouseEnter={() => {setTweetId(main._id); setExit(true);}}>
+          <div className="tweet-header">
+            <div className="tweet-image"></div>
+            <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/profile/${main.user._id}`} key={main._id}><div className="tweet-username">{main.user.username}</div></Link>
+            <div className="tweet-date">
+            {new Date(main.created).toLocaleDateString('default', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+              })}
+            </div>
+            <div style={{ display: (username === main.user.username) ? "" : "none" }} className="delete" onClick={toggle1}>
+              <img
+              alt=""
+              src="/images/image7.svg"
+              />
+            </div>
+          </div>
+          <div className="tweet-content">{main.tweet}</div>
+          <div className="tweet-actions">
+            <svg viewBox="0 0 24 24" aria-hidden="true" id={main.likes.includes(user) ? "unlike" : "like"} onClick={handleLike}><g><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path></g></svg>
+            <div style={{"margin-left": "-12px"}}>{main.likes.length}</div>
+            <svg viewBox="0 0 24 24" aria-hidden="true" id={main.retweets.includes(user) ? "unretweet" : "retweet"} onClick={handleRetweet}><g><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"></path></g></svg>
+            <div style={{"margin-left": "-12px"}}>{main.retweets.length}</div>
+            <svg viewBox="0 0 24 24" aria-hidden="true" id="reply" onClick={toggle}><g><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"></path></g></svg>
+            <div style={{"margin-left": "-12px"}}>{main.replies.length}</div>
+          </div>
         </div>
-        <div className="my-tweets" style={{ display: (!select) ? "none" : "" }}>
+      </div>
+      <div id="prompt" onClick={toggle} onMouseEnter={() => {setTweetId(main._id); setExit(false);}}>
+        <div id="reply-prompt">Tweet your reply...</div>
+      </div>
+      <div className="feed-box3">
+        <div className="my-tweets">
           {tweets && tweets.length > 0 ? (
             [...tweets].reverse().map((tweet) => (
               <div className="my-tweet" onMouseEnter={() => setTweetId(tweet._id)}>
@@ -269,6 +288,12 @@ function Explore() {
                       year: 'numeric',
                     })}
                   </div>
+                  <div style={{ display: (username === tweet.user.username) ? "" : "none" }} className="delete" onClick={toggle1}>
+                    <img
+                    alt=""
+                    src="/images/image7.svg"
+                    />
+                </div>
                 </div>
                 <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/tweet/${tweet._id}`} key={tweet._id}><div className="tweet-content">{tweet.tweet}</div></Link>
                 <div className="tweet-actions">
@@ -282,7 +307,7 @@ function Explore() {
               </div>
             ))
           ) : (
-            <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no tweets found...</div>
+            <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no replies...</div>
           )}
         </div>
       </div>
@@ -298,8 +323,19 @@ function Explore() {
           </form>
         </div>
       </div>
+      <div class="popup1">
+        <div class="popup-content1">
+          <form>
+            <div id="delete-text1">Are you sure you want to delete this tweet?</div>
+            <div class="popup-buttons1">
+              <button class="popup-button1" type="button" onClick={toggle1}>Cancel</button>
+              <button class="popup-button-delete1" type="button" onClick={handleDelete}>Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
   </div>
   );
 }
 
-export default Explore;
+export default Tweet;

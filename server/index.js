@@ -342,7 +342,7 @@ app.post('/delete-tweet', async (req, res) => {
   }
 });
 
-// Define the username route
+// Define the update username route
 app.post('/username', async (req, res) => {
   try {
       if (req.body.username1 != req.body.username2) {
@@ -365,7 +365,7 @@ app.post('/username', async (req, res) => {
   }
 });
 
-// Define the password route
+// Define the update password route
 app.post('/password', async (req, res) => {
   try {
       if (req.body.password1 != req.body.password2) {
@@ -421,7 +421,7 @@ app.post('/delete-account', async (req, res) => {
   }
 });
 
-// Define the feed route
+// Define the feed (view) route
 app.get('/feed', async (req, res) => {
   if (req.isAuthenticated()) {
     try {
@@ -446,13 +446,13 @@ app.get('/profile', async (req, res) => {
       const user = await User.findById(userId);
       const tweets = await Tweet.find({
         $or: [
-          { $and: [{ user: userId }] },
+          { $and: [{ user: userId, parent: true }] },
           { $and: [{ _id: { $in: user.retweets } }] },
         ],
       }).populate('user');
       res.status(200).json({ user: req.user, tweets });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).json({ message: 'error retrieving profile data...' });
   
     }
@@ -477,6 +477,7 @@ app.get('/explore', async (req, res) => {
     res.status(401).json({ message: 'unauthorized' });
   }
 });
+
 // Define the user profile route
 app.get('/profile/:id', async (req, res) => {
   if (req.isAuthenticated()) {
@@ -484,10 +485,10 @@ app.get('/profile/:id', async (req, res) => {
       const currentUser = req.user;
       const userId = (req.params.id);
       const user = await User.findById(userId);
-      const tweets = await Tweet.find({ $or: [{ user: userId }, { _id: { $in: user.retweets }}]}).populate('user');
+      const tweets = await Tweet.find({ $or: [{ user: userId, parent: true }, { _id: { $in: user.retweets }}]}).populate('user');
       res.status(200).json({ currentUser: currentUser, user: user, tweets });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).json({ message: 'error retrieving profile data...' });
     }
   } else {
@@ -495,6 +496,7 @@ app.get('/profile/:id', async (req, res) => {
   }
 });
 
+// Define the tweet (view) route
 app.get('/tweet/:id', async (req, res) => {
   if (req.isAuthenticated()) {
     try {
@@ -503,7 +505,7 @@ app.get('/tweet/:id', async (req, res) => {
       const tweet = await Tweet.find({ _id: tweetId }).populate('user').populate({ path: 'replies', populate: { path: 'user', select: 'username' } });
       res.status(200).json({ user: user, tweet: tweet[0] });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).json({ message: 'error retrieving profile data...' });
     }
   } else {
