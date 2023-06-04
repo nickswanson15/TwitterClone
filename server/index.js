@@ -56,6 +56,7 @@ const userSchema = new mongoose.Schema({
   
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet' }],
   retweets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tweet' }],
 
@@ -83,6 +84,14 @@ const tweetSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
+  replies: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Tweet',
+  }],
+  parent: {
+    type: Boolean,
+    default: true,
+  },
   created: {
     type: Date,
     default: Date.now
@@ -289,11 +298,39 @@ app.post('/retweet', async (req, res) => {
   }
 });
 
+// Define the reply route
+app.post('/reply', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const tweetId = req.body.tweetId;
+    const replyText = req.body.replyText;
+    const tweet = await Tweet.findById(tweetId);
+    if (!tweet) {
+      return res.status(404).json({ message: 'tweet not found.' });
+    }
+    const newReply = new Tweet({
+      tweet: replyText,
+      user: userId,
+      parent: false
+    });
+    await newReply.save();
+    tweet.replies.push(newReply.id);
+    await tweet.save();
+    res.status(200).json({ message: 'replied!' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'error replying...' });
+  }
+});
+
 // Define the delete tweet route
 app.post('/delete-tweet', async (req, res) => {
   try {
     const deleteID = req.body.deleteID;
     const tweet = await Tweet.findOne({ _id: deleteID });
+    for (const replyId of tweet.replies) {
+      await Tweet.findOneAndDelete({ _id: replyId });
+    }
     for (const userId of tweet.retweets) {
       await User.findByIdAndUpdate(userId, { $pull: { retweets: deleteID } });
     }
@@ -362,6 +399,12 @@ app.post('/delete-account', async (req, res) => {
       following.followers.splice(followingIndex, 1);
       await following.save();
     }
+    const userReplies = await Tweet.find({ user: user._id });
+    for (const tweet of userReplies) {
+      for (const replyId of tweet.replies) {
+        await Tweet.findOneAndDelete({ _id: replyId });
+      }
+    }
     const userTweets = await Tweet.find({ user: user._id });
     for (const tweet of userTweets) {
       await Tweet.updateMany(
@@ -384,7 +427,7 @@ app.get('/feed', async (req, res) => {
     try {
       const currentUser = await User.findById(req.user.id).populate('following', 'username');
       const followingUserIds = currentUser.following.map(user => user.id);
-      const tweets = await Tweet.find({ $or: [{ user: { $in: followingUserIds } }, { _id: { $in: currentUser.retweets } }] }).populate('user');
+      const tweets = await Tweet.find({ $or: [{ user: { $in: followingUserIds }, parent:true }, { user: currentUser._id, parent: true }, { _id: { $in: currentUser.retweets } }, { retweets: { $in: followingUserIds } }] }).populate('user');
       res.status(200).json({ user: req.user, tweets });
     } catch (err) {
       console.log(err);
@@ -401,7 +444,12 @@ app.get('/profile', async (req, res) => {
     try {
       const userId = req.user.id;
       const user = await User.findById(userId);
-      const tweets = await Tweet.find({ $or: [{ user: userId }, { _id: { $in: user.retweets } }] }).populate('user');
+      const tweets = await Tweet.find({
+        $or: [
+          { $and: [{ user: userId }] },
+          { $and: [{ _id: { $in: user.retweets } }] },
+        ],
+      }).populate('user');
       res.status(200).json({ user: req.user, tweets });
     } catch (err) {
       console.log(err)
@@ -419,7 +467,7 @@ app.get('/explore', async (req, res) => {
     try {
       const currentUser = req.user;
       const users = await User.find({ _id: { $ne: currentUser._id } }).limit(20);
-      const tweets = await Tweet.find({ user: { $ne: currentUser._id } }).populate('user').limit(20);
+      const tweets = await Tweet.find({ user: { $ne: currentUser._id }, parent: true }).populate('user').limit(20);
       res.status(200).json({ user: currentUser, users, tweets });
     } catch (err) {
       console.log(err);
@@ -433,11 +481,27 @@ app.get('/explore', async (req, res) => {
 app.get('/profile/:id', async (req, res) => {
   if (req.isAuthenticated()) {
     try {
-      const userId = (req.params.id);
       const currentUser = req.user;
-      const user = await User.find({ _id: userId });
-      const tweets = await Tweet.find({ $or: [{ user: userId }, { _id: { $in: user.retweets } }] }).populate('user');
-      res.status(200).json({ currentUser: currentUser, user: user[0], tweets });
+      const userId = (req.params.id);
+      const user = await User.findById(userId);
+      const tweets = await Tweet.find({ $or: [{ user: userId }, { _id: { $in: user.retweets }}]}).populate('user');
+      res.status(200).json({ currentUser: currentUser, user: user, tweets });
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ message: 'error retrieving profile data...' });
+    }
+  } else {
+    res.status(401).json({ message: 'unauthorized' });
+  }
+});
+
+app.get('/tweet/:id', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const user = req.user;
+      const tweetId = (req.params.id);
+      const tweet = await Tweet.find({ _id: tweetId }).populate('user').populate({ path: 'replies', populate: { path: 'user', select: 'username' } });
+      res.status(200).json({ user: user, tweet: tweet[0] });
     } catch (err) {
       console.log(err)
       res.status(500).json({ message: 'error retrieving profile data...' });
