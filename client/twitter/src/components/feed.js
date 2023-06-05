@@ -2,8 +2,8 @@
 TODO:
 
 mon:
-stripe webhook and secret key
-host (fix cors and stripe in express and proxy in package.json)
+stripe webhook and secret key, add check mark
+host (fix cors in express and proxy in package.json)
 
 all:
 Double Click

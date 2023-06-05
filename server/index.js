@@ -564,7 +564,7 @@ app.get('/logout', function(req, res, next) {
 });
 
 // Stripe payment processing for Twitter Blue
-const endpointSecret = process.env.WEBHOOK;
+const endpointSecret = '';
 const stripe = require('stripe')(process.env.STRIPE);
 app.post('/checkout', async (req, res) => {
   const session = await stripe.checkout.sessions.create({
@@ -594,7 +594,7 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
         endpointSecret
       );
     } catch (err) {
-      console.log(`⚠️  Webhook signature verification failed.`, err.message);
+      console.log(`Webhook signature verification failed.`, err.message);
       return response.sendStatus(400);
     }
   }
