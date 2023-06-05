@@ -258,8 +258,8 @@ function UserProfile() {
         </div>
         <div className="profile-date">Joined {date}</div>
         <div className="profile-connections">
-          <div className="following">{followers} Followers</div>
-          <div className="followers">{following} Following</div>
+        <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/connections/${user}`}><div className="following">{followers} Followers</div></Link>
+        <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/connections/${user}`}><div className="following">{following} Following</div></Link>
         </div>
         <div className="my-tweets" style={{opacity: tweets && tweets.length > 0 ? 100: 100}}>
           {tweets && tweets.length > 0 ? (

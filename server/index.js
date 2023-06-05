@@ -328,11 +328,14 @@ app.post('/delete-tweet', async (req, res) => {
   try {
     const deleteID = req.body.deleteID;
     const tweet = await Tweet.findOne({ _id: deleteID });
-    for (const replyId of tweet.replies) {
-      await Tweet.findOneAndDelete({ _id: replyId });
+    for (const userId of tweet.likes) {
+      await User.findByIdAndUpdate(userId, { $pull: { likes: deleteID } });
     }
     for (const userId of tweet.retweets) {
       await User.findByIdAndUpdate(userId, { $pull: { retweets: deleteID } });
+    }
+    for (const replyId of tweet.replies) {
+      await Tweet.findOneAndDelete({ _id: replyId });
     }
     await Tweet.findOneAndDelete({ _id: deleteID });
     res.status(200).json({ message: 'deleted!' });
@@ -478,6 +481,27 @@ app.get('/explore', async (req, res) => {
   }
 });
 
+// Define the notifications route
+app.get('/notifications', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const userId = req.user.id;
+      const user = await User.findById(userId);
+      const tweets = await Tweet.find({ user: userId, parent: true })
+        .populate({ path: 'user', select: 'username' })
+        .populate({ path: 'likes', select: 'username' })
+        .populate({ path: 'retweets', select: 'username' })
+        .populate({ path: 'replies', populate: { path: 'user', select: 'username' } });
+      res.status(200).json({ user: user, tweets });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'error retrieving notifications data...' });
+    }
+  } else {
+    res.status(401).json({ message: 'unauthorized' });
+  }
+});
+
 // Define the user profile route
 app.get('/profile/:id', async (req, res) => {
   if (req.isAuthenticated()) {
@@ -490,6 +514,24 @@ app.get('/profile/:id', async (req, res) => {
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: 'error retrieving profile data...' });
+    }
+  } else {
+    res.status(401).json({ message: 'unauthorized' });
+  }
+});
+
+// Define the user connections route
+app.get('/connections/:id', async (req, res) => {
+  if (req.isAuthenticated()) {
+    try {
+      const userId = (req.params.id);
+      const user = await User.findById(userId);
+      const followers = await User.find({ _id: { $in: user.followers } });
+      const following = await User.find({ _id: { $in: user.following } });
+      res.status(200).json({ user: user, followers, following });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: 'error retrieving connections data...' });
     }
   } else {
     res.status(401).json({ message: 'unauthorized' });

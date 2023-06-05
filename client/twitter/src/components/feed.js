@@ -1,16 +1,13 @@
 /*
 TODO:
 
-sun:
-notifications
-click on followers / following.
-
 mon:
 create a /stripe page which just makes a post request to a route that adds check mark to user and redirects to the profile page.
 host
 
 all:
 Double Click
+Comment Count
 */
 
 import './style.css';

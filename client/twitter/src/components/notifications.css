@@ -1,0 +1,607 @@
+.feed-container {
+    width: 100%;
+    display: flex;
+    overflow: auto;
+    min-height: 100vh;
+    transition: 0.3s;
+    align-items: flex-end;
+    border-color: #000000;
+    border-width: 4px;
+    flex-direction: column;
+    justify-content: center;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 5px;
+  }
+  .feed-container:focus {
+    outline: none;
+  }
+  .feed-search {
+    width: 30%;
+    height: 1000px;
+    display: flex;
+    padding: var(--dl-space-space-twounits);
+    align-self: flex-end;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  #title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    padding-right: 12px;
+    width: 600px;
+    height: 48px;
+  }
+  .feed-icon {
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+    margin-right: 20px;
+  }
+  .feed-card1 {
+    width: 280px;
+    height: 50%;
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    border-radius: 10%;
+    justify-content: center;
+    background-color: #F6F8FA;
+  }
+  .feed-card2 {
+    width: 280px;
+    height: 50%;
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    border-radius: 10%;
+    justify-content: center;
+    background-color: #F6F8FA;
+  }
+  .feed-navigation {
+    width: 400px;
+    height: 650px;
+    display: flex;
+    align-self: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-twitter-logo {
+    top: 32px;
+    left: 80px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-group {
+    top: 3.67px;
+    left: 1.25px;
+    width: 30.27px;
+    height: 24.605px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 1;
+  }
+  .feed-vector {
+    top: 0px;
+    left: 0px;
+    width: 30px;
+    height: 25px;
+    position: absolute;
+  }
+  .feed-home {
+    top: 96px;
+    left: 80px;
+    width: 95px;
+    height: 36px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-house {
+    top: 4px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-group01 {
+    top: 1.925px;
+    left: 0.975px;
+    width: 24.052px;
+    height: 21.937px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 1;
+  }
+  .feed-vector01 {
+    top: 0px;
+    left: 0px;
+    width: 24px;
+    height: 22px;
+    position: absolute;
+  }
+  .feed-text {
+    text-decoration: none;
+    top: 6px;
+    flex: none;
+    color: var(--dl-color-default-twitterblue);
+    right: -44px;
+    width: 100%;
+    height: auto;
+    position: absolute;
+    font-size: 19px;
+    font-style: Bold;
+    text-align: left;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    text-decoration: none;
+  }
+  .feed-explore {
+    top: 152px;
+    left: 80px;
+    width: 95px;
+    height: 36px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-hashtag {
+    top: 4px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-group02 {
+    top: 2.44px;
+    left: 2.4375px;
+    width: 21.125px;
+    height: 21.124px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 1;
+  }
+  .feed-vector02 {
+    top: 0px;
+    left: 0px;
+    width: 21px;
+    height: 21px;
+    position: absolute;
+  }
+  .feed-text02 {
+    text-decoration: none;
+    top: 6px;
+    flex: none;
+    color: var(--dl-color-default-gray1);
+    right: -44px;
+    width: 100%;
+    height: auto;
+    position: absolute;
+    font-size: 19px;
+    font-style: Bold;
+    text-align: left;
+    font-weight: 700;
+    line-height: normal;
+    font-stretch: normal;
+    text-decoration: none;
+  }
+  .feed-notifications {
+    top: 208px;
+    left: 80px;
+    width: 95px;
+    height: 36px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-notification {
+    top: 4px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-group03 {
+    top: 2.1px;
+    left: 2.16px;
+    width: 21.66px;
+    height: 21.72px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 1;
+  }
+  .feed-vector03 {
+    top: 0px;
+    left: 0px;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+  }
+  .feed-twitterblue {
+    top: 264px;
+    left: 80px;
+    width: 125px;
+    height: 36px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-twitterblue1 {
+    top: 4px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-group04 {
+    top: 3.63px;
+    left: 3.63px;
+    width: 18.74px;
+    height: 21.83px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 1;
+  }
+  .feed-vector04 {
+    top: 0px;
+    left: 0px;
+    width: 19px;
+    height: 22px;
+    position: absolute;
+  }
+  .feed-profile {
+    top: 376px;
+    left: 80px;
+    width: 95px;
+    height: 36px;
+    color: var(--dl-color-default-twitterblue);
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-profile1 {
+    top: 4px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    color: var(--dl-color-default-twitterblue);
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-group05 {
+    top: 2.166px;
+    left: 2.166px;
+    width: 21.666px;
+    height: 21.666px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 1;
+  }
+  .feed-vector05 {
+    top: 0px;
+    left: 0px;
+    width: 23px;
+    height: 23px;
+    position: absolute;
+  }
+  .feed-settings {
+    top: 320px;
+    left: 80px;
+    width: 95px;
+    height: 36px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-setting {
+    top: 4px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+  .feed-group06 {
+    top: 1.354px;
+    left: 1.354px;
+    width: 23.291px;
+    height: 23.291px;
+    display: flex;
+    position: absolute;
+    align-items: flex-start;
+    flex-shrink: 1;
+  }
+  .feed-vector06 {
+    top: 9.75px;
+    left: 4.875px;
+    width: 14px;
+    height: 4px;
+    position: absolute;
+  }
+  .feed-vector07 {
+    top: 0px;
+    left: 0px;
+    width: 23px;
+    height: 23px;
+    position: absolute;
+  }
+  .feed-main-logout-button {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+    gap: 10px;
+    top: 450px;
+    flex: none;
+    left: 70px;
+    width: auto;
+    display: flex;
+    padding: 16px 70px;
+    overflow: hidden;
+    position: absolute;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.08) ;
+    align-items: center;
+    border-radius: 100px;
+    background-color: var(--dl-color-default-twitterblue);
+  }
+  .feed-main-logout-button:hover {
+    opacity: 95%;
+  }
+  .popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+  }
+  .popup-content {
+    background-color: white;
+    padding: 20px;
+    width: 600px;
+    position: absolute;
+    top: 50%;
+    left: 48.6%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  .popup-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  } 
+  .popup-button {
+    border: none;
+    font-size: 15px;
+    font-style: Bold;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    width: 88px;
+    height: 32px;
+    border-radius: 100px;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.0799);
+    background-color: var(--dl-color-default-twitterblue);
+  }
+  .popup-button:hover {
+    opacity: 95%;
+  }
+  .select {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    position: absolute;
+    width: 601px;
+    height: 100px;
+    padding-top: 50px;
+    border: .1px solid #bdbdbd;
+  }
+  #select1{
+    margin: 10px;
+    color: black;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 5px solid var(--dl-color-default-twitterblue);
+  }
+  #select2{
+    margin: 10px;
+    color: grey;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .feed-tweet2 {
+    top: 0px;
+    left: 400px;
+    display: flex;
+    position: absolute;
+  }
+  .feed-box2 {
+    margin-top: 80px;
+  }
+  .my-tweets {
+    border-top: .1px solid #bdbdbd;
+    border-left: .1px solid #bdbdbd;
+    border-right: .1px solid #bdbdbd;
+  }
+  .my-tweet {
+    left: 400px;
+    width: 600px;
+    padding-top: 20px;
+    padding-left: 15px;
+    border-bottom: .1px solid #bdbdbd;
+  }
+  .my-tweet:hover {
+    background-color: #f4f4f4;
+  }
+  .tweet-header {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+  }
+  .tweet-image {
+    height: 25px;
+    width: 25px;
+    border-radius: 100%;
+    border: .1px solid black;
+    background-color: white;
+  }
+  .tweet-username {
+    font-weight: bold;
+    font-size: 15px;
+    padding-left: 15px;
+  }
+  .tweet-date {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    padding-left: 15px;
+    color: #bdbdbd;
+  }
+  .tweet-content {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
+    overflow-wrap: break-word;
+  }
+  #like { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  } 
+  #retweet { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  } 
+  #reply { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  #like:hover { 
+    fill: hotpink;
+  } 
+  #retweet:hover { 
+    fill: #08bc7f;
+  }
+  #reply:hover { 
+    fill: var(--dl-color-default-twitterblue);
+  }
+  #unlike { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    fill: hotpink;
+  } 
+  #unretweet { 
+    cursor: pointer;
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    fill: #08bc7f;
+  } 
+  #unlike:hover { 
+    fill: black;
+  } 
+  #unretweet:hover { 
+    fill: black;
+  }
+  @media(max-width: 1400px) {
+    .feed-search {
+        width: 0%;
+        height: 1000px;
+        opacity: 0;
+        align-self: flex-end;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .feed-card1 {
+        width: 0%;
+    }
+    .feed-card2 {
+        width: 0px;
+    }
+    .feed-navigation {
+        width: 400px;
+        height: 650px;
+        align-self: flex-start;
+    }
+  }
+  button:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+  button:disabled:hover {
+    opacity: 50%;
+    cursor: auto;
+  }

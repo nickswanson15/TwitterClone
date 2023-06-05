@@ -1,23 +1,28 @@
 import './style.css';
-import './notifications.css';
+import './connections.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 
-function Notifications() {
+function Connections() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [tweets, setTweets] = useState(null);
+  const [select, setSelect] = useState(true);
+  const [followers, setFollowers] = useState(null);
+  const [following, setFollowing] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/notifications');
-        const data = await response.json();
+        const path = window.location.pathname;
+        const segments = path.split('/');
+        const userId = segments[segments.length - 1];
+        const response = await fetch(`/connections/${userId}`);
+        const data = await response.json();   
         if (response.ok) {
-          console.log(data)
           setUser(data.user._id);
-          setTweets(data.tweets);
+          setFollowers(data.followers);
+          setFollowing(data.following);
           setLoading(false);
         } else {
           console.log(data.message);
@@ -89,7 +94,7 @@ function Notifications() {
           </div>
         </div>
         <span>
-        <Link className="feed-text02" to="/explore">Explore</Link>
+        <Link className="feed-text" to="/explore">Explore</Link>
         </span>
       </div>
       <div className="feed-notifications">
@@ -103,7 +108,7 @@ function Notifications() {
           </div>
         </div>
         <span>
-        <Link className="feed-text" to="/notifications">Notifications</Link>
+        <Link className="feed-text02" to="/notifications">Notifications</Link>
         </span>
       </div>
       <div className="feed-twitterblue">
@@ -157,56 +162,40 @@ function Notifications() {
       </button>
     </div>
     <div className="feed-tweet2">
-      <div id="title">Notifications</div>
-      <div className="select"><span></span><span></span></div>
+      <div className="select"><span onClick={() => setSelect(true)} id={select ? "select1" : "select2"}>followers</span><span onClick={() => setSelect(false)} id={select ? "select2" : "select1"}>following</span></div>
       <div className="feed-box2">
-        <div className="my-tweets">
-          {tweets && tweets.length > 0 ? (
-            [...tweets].reverse().map((tweet) => (
-              <div>
-                {tweet.likes.length > 0 ? (
-                  [...tweet.likes].reverse().map((like) =>
-                  <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/tweet/${tweet._id}`} key={tweet._id}>
-                    <div style={{"padding": "20px"}} className="my-tweet">
-                      <div className="tweet-header">
-                        {like.username} liked your tweet!
-                      </div>
-                    </div>
-                  </Link>
-                  )
-                ) : (
-                  <span></span>
-                )}
-                {tweet.retweets.length > 0 ? (
-                  [...tweet.retweets].reverse().map((retweet) =>
-                  <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/tweet/${tweet._id}`} key={tweet._id}>
-                    <div style={{"padding": "20px"}} className="my-tweet">
-                      <div className="tweet-header">
-                        {retweet.username} retweeted your tweet!
-                      </div>
-                    </div>
-                  </Link>
-                  )
-                ) : (
-                  <span></span>
-                )}
-                {tweet.replies.length > 0 ? (
-                  [...tweet.replies].reverse().map((reply) =>
-                  <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/tweet/${tweet._id}`} key={tweet._id}>
-                    <div style={{"padding": "20px"}} className="my-tweet">
-                      <div className="tweet-header">
-                        {reply.user.username} replied to your tweet!
-                      </div>
-                    </div>
-                  </Link>
-                  )
-                ) : (
-                  <span></span>
-                )}
+      <div className="my-tweets" style={{ display: (select) ? "" : "none" }}>
+        {followers && followers.length > 0 ? (
+            [...followers].map((follower) => (
+              <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/profile/${follower._id}`} key={follower._id}>
+              <div className="my-tweet">
+                <div className="tweet-header">
+                  <div className="tweet-image"></div>
+                  <div className="tweet-username">{follower.username}</div>
+                </div>
+                <div className="tweet-content"></div>
               </div>
+              </Link>
             ))
           ) : (
-            <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no notifications...</div>
+            <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no users found...</div>
+          )}
+        </div>
+        <div className="my-tweets" style={{ display: (select) ? "none" : "" }}>
+          {following && following.length > 0 ? (
+            [...following].map((followee) => (
+              <Link style={{ textDecoration: 'none', color: 'inherit'}} to={`/profile/${followee._id}`} key={followee._id}>
+              <div className="my-tweet">
+                <div className="tweet-header">
+                  <div className="tweet-image"></div>
+                  <div className="tweet-username">{followee.username}</div>
+                </div>
+                <div className="tweet-content"></div>
+              </div>
+              </Link>
+            ))
+          ) : (
+            <div className="my-tweet" style={{"padding-left": "230px", "padding-bottom": "20px"}}>no users found...</div>
           )}
         </div>
       </div>
@@ -215,4 +204,4 @@ function Notifications() {
   );
 }
 
-export default Notifications;
+export default Connections;

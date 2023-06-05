@@ -397,74 +397,6 @@
   .feed-main-logout-button:hover {
     opacity: 95%;
   }
-  #prompt {
-    width: 600px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    color: grey;
-    fill: gray;
-    border: .1px solid #bdbdbd;
-  }
-  #prompt:hover{
-    color: black;
-    fill: black;
-  }
-  .popup-content1 {
-    background-color: white;
-    padding: 20px;
-    width: 455px;
-    position: absolute;
-    top: 50%;
-    left: 48.6%;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-#delete-text1 {
-    width: 100%;
-    height: 100px;
-    font-size: 1.2rem;
-    border: none;
-    resize: none;
-    outline: none;
-}
-.popup-buttons1 {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-} 
-.popup-button1 {
-  border: none;
-  font-size: 15px;
-  font-style: Bold;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-  width: 88px;
-  height: 32px;
-  border-radius: 100px;
-  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.0799);
-  background-color: var(--dl-color-default-twitterblue);
-}
-.popup-button-delete1 {
-  border: none;
-  font-size: 15px;
-  font-style: Bold;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-  width: 88px;
-  height: 32px;
-  border-radius: 100px;
-  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.0799);
-  background-color: var(--dl-color-danger-300);
-}
-.popup-button1:hover {
-  opacity: 95%;
-}
   .popup {
     display: none;
     position: fixed;
@@ -538,9 +470,8 @@
     display: flex;
     position: absolute;
   }
-  .feed-box3 {
-    margin-top: -20px;
-    position: absolute;
+  .feed-box2 {
+    margin-top: 80px;
   }
   .my-tweets {
     border-top: .1px solid #bdbdbd;

@@ -171,7 +171,7 @@ function Tweet() {
           </div>
         </div>
         <span>
-        <Link className="feed-text02" to="/explore">Explore</Link>
+        <Link className="feed-text" to="/explore">Explore</Link>
         </span>
       </div>
       <div className="feed-notifications">
@@ -239,7 +239,6 @@ function Tweet() {
       </button>
     </div>
     <div className="feed-tweet2">
-
       <div className="my-tweets">
         <div className="my-tweet" onMouseEnter={() => {setTweetId(main._id); setExit(true);}}>
           <div className="tweet-header">
@@ -269,11 +268,10 @@ function Tweet() {
             <div style={{"margin-left": "-12px"}}>{main.replies.length}</div>
           </div>
         </div>
-      </div>
-      <div id="prompt" onClick={toggle} onMouseEnter={() => {setTweetId(main._id); setExit(false);}}>
-        <div id="reply-prompt">Tweet your reply...</div>
-      </div>
-      <div className="feed-box3">
+        <div id="prompt" onClick={toggle} onMouseEnter={() => {setTweetId(main._id); setExit(false);}}>
+          <div id="reply-prompt">Tweet your reply...</div>
+        </div>
+        <div className="feed-box3">
         <div className="my-tweets">
           {tweets && tweets.length > 0 ? (
             [...tweets].reverse().map((tweet) => (
@@ -311,6 +309,7 @@ function Tweet() {
           )}
         </div>
       </div>
+    </div>
     </div>
     <div class="popup">
         <div class="popup-content">
