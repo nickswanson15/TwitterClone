@@ -31,7 +31,6 @@ function App() {
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route path="/connections/:id" element={<Connections />} />
           <Route path="/tweet/:id" element={<Tweet />} />
-
         </Routes>
       </div>
     </Router>

@@ -2,8 +2,8 @@
 TODO:
 
 mon:
-create a /stripe page which just makes a post request to a route that adds check mark to user and redirects to the profile page.
-host
+stripe webhook and secret key
+host (fix cors and stripe in express and proxy in package.json)
 
 all:
 Double Click

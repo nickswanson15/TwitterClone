@@ -15,7 +15,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-  origin: "https://localhost:3000",
+  origin: "https://localhost:3000", // change for deployment
   credentials: true,
 }));
 app.use(session({
@@ -564,21 +564,52 @@ app.get('/logout', function(req, res, next) {
 });
 
 // Stripe payment processing for Twitter Blue
+const endpointSecret = process.env.WEBHOOK;
 const stripe = require('stripe')(process.env.STRIPE);
 app.post('/checkout', async (req, res) => {
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
-        price: 'price_1NEq93GjCmRHchXXq8KOaXGY',
+        price: 'price_1NEp57GjCmRHchXXijtJpL08',
         quantity: 1,
       },
     ],
     mode: 'payment',
-    success_url: `http://localhost:3000/stripe`,
-    cancel_url: `http://localhost:3000/twitterblue`,
+    success_url: `http://localhost:3000/webhook`, // change for deployment
+    cancel_url: `http://localhost:3000/twitterblue`, // change for deployment
     automatic_tax: {enabled: true},
   });
+
   res.status(200).json({ message: session.url });
+});
+
+app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+  let event = request.body;
+  if (endpointSecret) {
+    const signature = request.headers['stripe-signature'];
+    try {
+      event = stripe.webhooks.constructEvent(
+        request.body,
+        signature,
+        endpointSecret
+      );
+    } catch (err) {
+      console.log(`⚠️  Webhook signature verification failed.`, err.message);
+      return response.sendStatus(400);
+    }
+  }
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      const paymentIntent = event.data.object;
+      console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
+      break;
+    case 'payment_method.attached':
+      const paymentMethod = event.data.object;
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}.`);
+  }
+  response.send();
 });
 
 // Start the server
