@@ -12,6 +12,8 @@ const cookieParser = require('cookie-parser')
 const app = express();
 
 // configure middleware
+app.use(express.json());
+app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
@@ -52,6 +54,10 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  blue: {
+    type: Boolean,
+    default: false
   },
   
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
@@ -457,7 +463,6 @@ app.get('/profile', async (req, res) => {
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: 'error retrieving profile data...' });
-  
     }
   } else {
     res.status(401).json({ message: 'unauthorized' });
@@ -564,52 +569,30 @@ app.get('/logout', function(req, res, next) {
 });
 
 // Stripe payment processing for Twitter Blue
-const endpointSecret = '';
 const stripe = require('stripe')(process.env.STRIPE);
-app.post('/checkout', async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price: 'price_1NEp57GjCmRHchXXijtJpL08',
-        quantity: 1,
-      },
-    ],
-    mode: 'payment',
-    success_url: `http://localhost:3000/webhook`, // change for deployment
-    cancel_url: `http://localhost:3000/twitterblue`, // change for deployment
-    automatic_tax: {enabled: true},
+app.post("/create-payment-intent", async (req, res) => {
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 100,
+    currency: "usd",
+    automatic_payment_methods: {
+      enabled: true,
+    },
   });
-
-  res.status(200).json({ message: session.url });
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
 });
 
-app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
-  let event = request.body;
-  if (endpointSecret) {
-    const signature = request.headers['stripe-signature'];
-    try {
-      event = stripe.webhooks.constructEvent(
-        request.body,
-        signature,
-        endpointSecret
-      );
-    } catch (err) {
-      console.log(`Webhook signature verification failed.`, err.message);
-      return response.sendStatus(400);
-    }
+app.post("/payment-success", async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    user.blue = true;
+    res.status(200).json({ message: 'success!' });
+    await user.save();
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'error...' });
   }
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
-      break;
-    case 'payment_method.attached':
-      const paymentMethod = event.data.object;
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}.`);
-  }
-  response.send();
 });
 
 // Start the server
