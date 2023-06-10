@@ -1,39 +1,43 @@
-import "./style.css"
-import "./twitterblue.css"
-import React from 'react';
+import "./twitterblue.css";
+import CheckoutForm from "./checkoutform";
+import React, { useState, useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { Link } from "react-router-dom";
 
-function TwitterBlue() {
-  const handleCheckout = async () => {
-    try {
-      const response = await fetch('/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        window.location.href = data.message;
-      } else {
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+const stripePromise = loadStripe("pk_live_51NEoEwGjCmRHchXX1fsZ7WeSwaFCQi6WpzbGSw8YbhfJNzLxsVHkfdSKaSczep6vmJIyug5O1OGjsXMDXBMtpPI000rRkRmvTG");
+
+export default function TwitterBlue() {
+  const [clientSecret, setClientSecret] = useState("");
+
+  useEffect(() => {
+    fetch("/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ }),
+    })
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret));
+  }, []);
+
+  const appearance = {
+    theme: 'flat',
+  };
+  const options = {
+    clientSecret,
+    appearance,
   };
 
   return (
-    <div>
-      <div onClick={handleCheckout} id="popup">
-        <img alt="" id="image" src="/twitterblue.jpeg"></img>
-        <div id="content">
-          <div id="text">Get</div>
-          <div id="text">Twitter</div>
-          <div id="text">Blue.</div>
-        </div>
-      </div>
-      <Link to="/feed"><div id="back"><img id="back-img" alt ="" src="/back.png"></img></div></Link>
+    <div id="outer-div">
+      <Link to="/feed">
+      <img id="img" alt="" src="./home.png"></img>
+      </Link>
+      {clientSecret && (
+        <Elements options={options} stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>
+      )}
     </div>
   );
 }
-
-export default TwitterBlue;

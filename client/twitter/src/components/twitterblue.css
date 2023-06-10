@@ -1,55 +1,149 @@
-#popup {
+#outer {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  #payment-form {
+    width: 50vw;
+    min-width: 500px;
+    align-self: center;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 10px;
+    padding: 40px;
+  }
+  
+  
+  #payment-message {
+    color: rgb(105, 115, 134);
+    font-size: 16px;
+    line-height: 20px;
+    padding-top: 12px;
+    text-align: center;
+  }
+  
+  #payment-element {
+    margin-bottom: 24px;
+  }
+  
+  #pay {
+    background: #007aff;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+    border-radius: 10px;
+    border: 0;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
-    position: absolute;
-    padding: 20px;
-    width: 800px;
-    padding-top: 100px;
-    padding-bottom: 100px;
-    padding-left: 50px;
-    padding-right: 50px;
-    top: 50%;
-    left: 50%;
+    display: block;
+    transition: all 0.2s ease;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    width: 100%;
+  }
+  
+  #pay:hover {
+    color: black;
     background-color: white;
-    transform: translate(-50%, -50%);
-    transition: transform 0.5s;
-}
-#popup:hover {
-    transform: translate(-50%, -55%);
-}
-#image {
-    width: 450px;
-    height: 250px;
-    border-radius: 10%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-#content {
+    border: .1px solid black;
+  }
+  
+  #pay:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  
+  .spinner,
+  .spinner:before,
+  .spinner:after {
+    border-radius: 50%;
+  }
+  
+  .spinner {
+    color: #ffffff;
+    font-size: 22px;
+    text-indent: -99999px;
+    margin: 0px auto;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    box-shadow: inset 0 0 0 2px;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  .spinner:before,
+  .spinner:after {
     position: absolute;
-    padding-left: 65%;
-}
-#text {
-    font-size: 50px;
-    font-weight: bold;
-}
-#back {
-    position: absolute;
-    margin-top: 24%;
-    margin-left: 15%;
-}
-#back-img {
-    width: 50px;
-    height: 50px;
-}
-#back-img:hover {
-    cursor: pointer;
-    transform: scale(1.05);
-    transition: transform 0.2s;
-}
+    content: '';
+  }
+  
+  .spinner:before {
+    width: 10.4px;
+    height: 20.4px;
+    background: #5469d4;
+    border-radius: 20.4px 0 0 20.4px;
+    top: -0.2px;
+    left: -0.2px;
+    -webkit-transform-origin: 10.4px 10.2px;
+    transform-origin: 10.4px 10.2px;
+    -webkit-animation: loading 2s infinite ease 1.5s;
+    animation: loading 2s infinite ease 1.5s;
+  }
+  
+  .spinner:after {
+    width: 10.4px;
+    height: 10.2px;
+    background: #5469d4;
+    border-radius: 0 10.2px 10.2px 0;
+    top: -0.1px;
+    left: 10.2px;
+    -webkit-transform-origin: 0px 10.2px;
+    transform-origin: 0px 10.2px;
+    -webkit-animation: loading 2s infinite ease;
+    animation: loading 2s infinite ease;
+  }
 
-@media(max-width: 1150px) {
-    #back {
-        display: none;
+  #img {
+    width: 100px;
+    height: 100px;
+    margin-left: 46.5%;
+    margin-top: 2.5%;
+    border-radius: 100%;
+    position: absolute;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  
+  @keyframes loading {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
     }
-}
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @media(max-width: 1350px) {
+    #img {
+        display: none
+    }
+  }
+  @media(max-height: 700px) {
+    #img {
+        display: none
+    }
+  }
+  @media only screen and (max-width: 600px) {
+    #payment-form {
+      width: 80vw;
+      min-width: initial;
+    }
+  }

@@ -2,8 +2,9 @@
 TODO:
 
 mon:
-stripe webhook and secret key, add check mark
-host (fix cors in express and proxy in package.json)
+add check mark.
+deal with gitignore file variables.
+host (fix cors in express and proxy in package.json and stipe).
 
 all:
 Double Click
