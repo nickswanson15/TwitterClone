@@ -6,7 +6,7 @@
   "proxy": "https://twitterclone-y603.onrender.com",
   "scripts": {
     "start": "node index.js",
-    "server": "nodemon index.js",
+    "server": "node index.js",
     "client": "cd .. && cd client && cd twitter && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1"

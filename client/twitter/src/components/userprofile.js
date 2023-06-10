@@ -7,6 +7,7 @@ function UserProfile() {
   const navigate = useNavigate();
   const [followerList, setFollowerList] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [blue, setBlue] = useState(null);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState(null);
   const [date, setDate] = useState(null);
@@ -28,6 +29,7 @@ function UserProfile() {
         if (response.ok) {
           setFollowerList(data.user.followers);
           setCurrentUserId(data.currentUser._id);
+          setBlue(data.user.blue);
           setUser(data.user._id);
           setUsername(data.user.username);
           const date = new Date(data.user.created);
@@ -245,7 +247,7 @@ function UserProfile() {
             width="600px"
           />
         </div>
-        <div className="profile-image"></div>
+        <div className={(blue === true) ? "profile-image-blue" : "profile-image"}></div>
         <div  style={{"display": "flex"}}>
             <div className="profile-username">{username}</div>
             <button className={(followerList.includes(currentUserId)) ? "follow-button1" : "follow-button2"} onClick={handleFollow}>

@@ -460,6 +460,15 @@
     border: .1px solid black;
     background-color: white;
 }
+.profile-image-blue {
+  margin-left: 15px;
+  margin-top: 120px;
+  height: 100px;
+  width: 100px;
+  border-radius: 100%;
+  border: .5px solid var(--dl-color-default-twitterblue);
+  background-color: white;
+}
 .profile-username {
     font-size: 20px;
     font-weight: bold;

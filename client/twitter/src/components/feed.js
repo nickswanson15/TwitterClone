@@ -1,9 +1,6 @@
 /*
 TODO:
 
-mon:
-add check mark.
-deal with gitignore file variables.
 host (fix cors in express and proxy in package.json and stipe).
 
 all:

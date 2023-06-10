@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Profile() {
   const navigate = useNavigate();
+  const [blue, setBlue] = useState(null);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState(null);
   const [date, setDate] = useState(null);
@@ -21,6 +22,7 @@ function Profile() {
         const response = await fetch('/profile');
         const data = await response.json();
         if (response.ok) {
+          setBlue(data.user.blue);
           setUser(data.user._id)
           setUsername(data.user.username);
           const date = new Date(data.user.created);
@@ -247,7 +249,7 @@ function Profile() {
             width="600px"
           />
         </div>
-        <div className="profile-image"></div>
+        <div className={(blue === true) ? "profile-image-blue" : "profile-image"}></div>
         <div className="profile-username">{username}</div>
         <div className="profile-date">Joined {date}</div>
         <div className="profile-connections">
