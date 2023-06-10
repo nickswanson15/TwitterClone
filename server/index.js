@@ -17,7 +17,7 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-  origin: "https://localhost:3000", // change for deployment
+  origin: "https://twitterclone-y603.onrender", // change for deployment
   credentials: true,
 }));
 app.use(session({
